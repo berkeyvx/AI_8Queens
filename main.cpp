@@ -19,6 +19,7 @@
 
 #include <iostream>
 #include "state.hpp"
+#include "Timer.hpp"
 #include <fstream>
 
 
@@ -55,6 +56,7 @@ State hillclimb(State init, std::ofstream &f){
 
 
 int main(int argc, const char * argv[]) {
+    double totalTimeElapsed = 0.0;
     std::ofstream f;
     f.open("out.txt",std::ios::trunc);
     f.close();
@@ -62,12 +64,21 @@ int main(int argc, const char * argv[]) {
         f.open("out.txt", std::ios::app);
         f << "\n\n -------RANDOM TEST " << i << "-------\n";
         std::cout << "\n\nRandom  Test " << i <<"\n";
+        Timer t;
         State s;
         f << "Initial Collision " << s.countCollisions() << "\n";
         std::cout << "Initial Collision: " << s.countCollisions() << "\n";
         f.close();
         s.printBoard(f);
         hillclimb(s, f);
+        auto timeElapsed  = t.elapsed();
+        totalTimeElapsed  += timeElapsed;
+        f.open("out.txt", std::ios::app);
+        f << "Time elapsed: " << std::to_string(timeElapsed) << "\n";;
+        std::cout << "Time elapsed: " << t.elapsed() << "\n";
+        f.close();
+        t.reset();
     }
+    std::cout << "\n\nTotal  Time Elapsed for 10 Random Input:  "  << totalTimeElapsed  << "\n";
     return 0;
 }
